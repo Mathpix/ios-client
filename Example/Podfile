@@ -1,0 +1,12 @@
+use_frameworks!
+
+target 'MathpixClient_Example' do
+  pod 'MathpixClient', :path => '../'
+
+  target 'MathpixClient_Tests' do
+    inherit! :search_paths
+
+    pod 'Quick', '~> 1.0.0'
+  pod 'Nimble', '~> 5.1.1'
+  end
+end
