@@ -17,17 +17,26 @@ open class MathCaptureViewController: UIViewController
 {
     /// Callback called after onBack method invoked.
     public var backButtonCallback : MathpixClient.BackButtonCallback?
+    
     /// Callback called after recognition process completed.
     public var completionCallback : MathpixClient.RecognitionCallback?
+    
     /// Formats that the mathpix server should represent in response.
     public var outputFormats : [MathpixFormat]?
+    
     /// UI/UX properties to MathCaptureViewController.
     public var properties : MathCaptureProperties!
     
+    /// Animation recognition delegate
     public weak var delegate: MathCaptureViewControllerRecognitionAnimationDelegate?
     
+    /// Callback called when crop area selected
     public var regionSelectedCallback: (()->())?
+    
+    /// Callback called when crop area start dragging
     public var regionDraggingBeganCallback: (()->())?
+    
+    /// Callback called when crop area dragging
     public var regionDraggingCallback: ((_ bottomCenter : CGPoint)->())?
     
     fileprivate var cropOverlay : CropControlOverlay!
