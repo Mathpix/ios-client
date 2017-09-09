@@ -121,7 +121,7 @@ open class MathCaptureViewController: UIViewController
     
     // Setup help info label
     fileprivate func setupLabels() {
-        cropInfoLabel.text = properties.infoLabelText
+        cropInfoLabel.text = NSLocalizedString("Tap info label text", comment: "")
         cropInfoLabel.textColor = UIColor.white
         cropInfoLabel.font = UIFont.systemFont(ofSize: 20)
         cropInfoLabel.adjustsFontSizeToFitWidth = true
@@ -162,6 +162,8 @@ open class MathCaptureViewController: UIViewController
         if let flashIcon = properties.flashIcon {
             flashButton = UIButton(forAutoLayout: ())
             flashButton.setImage(flashIcon, for: .normal)
+            flashButton.contentVerticalAlignment = .fill
+            flashButton.contentHorizontalAlignment = .fill
         } else {
             let color = self.view.tintColor
             flashButton.layer.borderWidth = 1.5
@@ -179,6 +181,8 @@ open class MathCaptureViewController: UIViewController
     // Setup shutter button
     fileprivate func setupShutterButton() {
         shutterButton.setImage(properties.shutterIcon, for: .normal)
+        shutterButton.contentVerticalAlignment = .fill
+        shutterButton.contentHorizontalAlignment = .fill
         shutterButton.addTarget(self, action: #selector(MathCaptureViewController.onCapture), for: .touchUpInside)
         view.addSubview(shutterButton)
         shutterButton.autoPin(toBottomLayoutGuideOf: self, withInset: 20)
@@ -189,6 +193,8 @@ open class MathCaptureViewController: UIViewController
     // Setup back button
     fileprivate func setupBackButton() {
         backButton.setImage(properties.backIcon, for: .normal)
+        backButton.contentVerticalAlignment = .fill
+        backButton.contentHorizontalAlignment = .fill
         backButton.addTarget(self, action: #selector(MathCaptureViewController.onBack), for: .touchUpInside)
         view.addSubview(backButton)
         backButton.autoPin(toBottomLayoutGuideOf: self, withInset: 20)
@@ -233,6 +239,8 @@ open class MathCaptureViewController: UIViewController
         
         let cancelButton = UIButton()
         cancelButton.setImage(properties.cancelIcon, for: .normal)
+        cancelButton.contentVerticalAlignment = .fill
+        cancelButton.contentHorizontalAlignment = .fill
         cancelButton.addTarget(self, action: #selector(MathCaptureViewController.onCancel), for: .touchUpInside)
         
         dimmingView?.addSubview(cancelButton)
@@ -340,35 +348,50 @@ open class MathCaptureViewController: UIViewController
 
     
     func startAnimateRecognition() {
+        // Notify delegate
+        self.delegate?.willStartAnimateRecognition?()
+        // Show dimming view
         dimmingView?.alpha = 0.0
         dimmingView?.isHidden = false
         dimmingView?.backgroundColor = UIColor(white: 0.1, alpha: 0.8)
+        // begin recognition animation
         self.cropOverlay.addSubview(animator.view)
         animator.view.autoCenterInSuperview()
         self.animator.beginAnimation()
         UIView.animate(withDuration: 0.4, animations: {
             self.dimmingView?.alpha = 1.0
+            // Hide other controls
             self.cropInfoLabel.isHidden = true
             self.flashButton.isHidden = true
             self.shutterButton.isHidden = true
             self.backButton.isHidden = true
         }) { (finished) in
+            // Notify delegate
+            self.delegate?.didStartAnimateRecognition?()
         }
     }
     
     func stopAnimateRecognition(completionBlock: (() -> ())? = nil) {
+        // Notify delegate
+        self.delegate?.willEndAnimateRecognition?()
+        // finish recognition animation
         self.animator.finishAnimation()
         self.animator.view.removeFromSuperview()
         UIView.animate(withDuration: 0.4, animations: {
+            // Hide dimming view
             self.dimmingView?.alpha = 0.0
         }) { (finished) in
             self.dimmingView?.isHidden = true
+            // Return other controls
             self.cropInfoLabel.isHidden = false
             self.flashButton.isHidden = false
             self.shutterButton.isHidden = false
             self.backButton.isHidden = false
             completionBlock?()
+            // Clear crop area
             self.cropOverlay.clearResultView(animated: true)
+            // Notify delegate
+            self.delegate?.didEndAnimateRecognition?()
         }
     }
 
@@ -380,6 +403,7 @@ extension MathCaptureViewController: MPCameraSessionDelegate {
         changeControlsState(isEnabled: true)
         
         completionCallback?(error, nil)
+        MathpixClient.completion?(error, nil)
         self.didRecieve(error: error, result: nil)
         
         var handled = false
@@ -396,14 +420,10 @@ extension MathCaptureViewController: MPCameraSessionDelegate {
     open func didCapture(_ image: UIImage!) {
         if let resultImage = RecognitionService.cropImage(image, bounds: cameraView.bounds) {
             let croppedImage = cropOverlay.cropImageAndUpdateDisplay(resultImage, superview: cameraView)
-            self.delegate?.willStartAnimateRecognition?()
             self.startAnimateRecognition()
-            self.delegate?.didStartAnimateRecognition?()
             self.currentRequestId = MathpixClient.recognize(image: croppedImage, outputFormats: outputFormats, completion: { [weak self] (error, result) in
                 self?.currentRequestId = nil
-                self?.delegate?.willEndAnimateRecognition?()
                 self?.stopAnimateRecognition()
-                self?.delegate?.didEndAnimateRecognition?()
                 self?.changeControlsState(isEnabled: true)
                 // we don't need exit if user cancel request, catch request canceled error
                 if let error = error as? NetworkError, error == .requestCanceled {
@@ -411,6 +431,7 @@ extension MathCaptureViewController: MPCameraSessionDelegate {
                 }
                 
                 self?.completionCallback?(error, result)
+                MathpixClient.completion?(error, result)
                 self?.didRecieve(error: error, result: result)
                 
                 var handled = false

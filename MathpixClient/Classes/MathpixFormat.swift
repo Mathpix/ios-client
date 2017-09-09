@@ -33,7 +33,7 @@ extension FormatLatex: MathpixFormat {
 }
     /// The mathml field, if present and set to on, indicates the server should add a mathml field to the JSON result that is a string containing the MathML markup for the recognized math. In the case of an incompatible result, the server will instead add a mathml_error.
 public enum FormatMathml {
-    case on, off
+    case on
 }
 
 extension FormatMathml: MathpixFormat {
@@ -41,15 +41,13 @@ extension FormatMathml: MathpixFormat {
         switch self {
         case .on:
             return (key: "mathml", value: true)
-        case .off:
-            return (key: "mathml", value: false)
         }
     }
 }
 
     /// The wolfram field, if present and set to on, indicates the server should add a wolfram field to the JSON result that is a string compatible with the Wolfram Alpha engine. In the case of an incompatible result, the server will instead add a wolfram_error field.
 public enum FormatWolfram {
-    case on, off
+    case on
 }
 
 extension FormatWolfram: MathpixFormat {
@@ -57,8 +55,6 @@ extension FormatWolfram: MathpixFormat {
         switch self {
         case .on:
             return (key: "wolfram", value: true)
-        case .off:
-            return (key: "wolfram", value: false)
         }
     }
 }

@@ -11,6 +11,8 @@ import MathpixClient
 
 class CustomCameraViewController: MathCaptureViewController {
     
+    var menuButton: UIButton!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -19,15 +21,14 @@ class CustomCameraViewController: MathCaptureViewController {
         // Add your UI elements here
         
         
-        let menuButton = UIButton(forAutoLayout: ())
+        menuButton = UIButton(forAutoLayout: ())
         menuButton.setTitle("Menu", for: .normal)
         menuButton.addTarget(self, action: #selector(CustomCameraViewController.onMenu), for: .touchUpInside)
         
         view.addSubview(menuButton)
         menuButton.autoPin(toTopLayoutGuideOf: self, withInset: 8)
         menuButton.autoPinEdge(.trailing, to: .trailing, of: view, withOffset: -16)
-        
-        
+
     }
     
     // Override this method to setup custom init properties. Do not call super.
@@ -43,6 +44,7 @@ class CustomCameraViewController: MathCaptureViewController {
         
     }
     
+    // Place your crop area callbacks here
     override func setupCallbacks() {
         regionSelectedCallback = {
             print("region selected")
@@ -60,6 +62,7 @@ class CustomCameraViewController: MathCaptureViewController {
     // Override this method to set your controlls enabled/disabled when recognition in process.
     override func controlStateChanged(isEnabled: Bool) {
         print("control state \(isEnabled)")
+        menuButton.isEnabled = isEnabled
     }
     
     
@@ -93,6 +96,7 @@ class CustomCameraViewController: MathCaptureViewController {
 extension CustomCameraViewController: MathCaptureViewControllerRecognitionAnimationDelegate {
     func willStartAnimateRecognition() {
         print("willStartAnimateRecognition")
+        menuButton.isHidden = true
     }
     
     func didStartAnimateRecognition() {
@@ -105,6 +109,9 @@ extension CustomCameraViewController: MathCaptureViewControllerRecognitionAnimat
     
     func didEndAnimateRecognition() {
         print("didEndAnimateRecognition")
+        menuButton.isHidden = false
     }
 }
+
+
 

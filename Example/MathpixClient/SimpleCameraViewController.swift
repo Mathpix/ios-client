@@ -25,23 +25,17 @@ class SimpleCameraViewController: UIViewController {
     
     @IBAction func onLaunchCamera(_ sender: Any) {
         // Setup camera properties
-        let properties = MathCaptureProperties(infoLabelText: "Example info text: Tap anywhere",
-                                               captureType: .gesture,
-                                               requiredButtons: [.back,.flash],
+        let properties = MathCaptureProperties(captureType: .gesture,
+                                               requiredButtons: [.flash, .back],
                                                cropColor: UIColor.green,
                                                errorHandling: true)
         
         // Launch camera with back and completion blocks
         MathpixClient.launchCamera(source: self,
-                                   outputFormats: [FormatLatex.simplified, FormatWolfram.on],
+                                   outputFormats: [FormatLatex.simplified],
                                    withProperties: properties,
-                                   backButtonCallback:
-            {
-                print("back pressed")
-        },
                                    completion:
             { (error, result) in
-                print(result ?? error ?? "")
                 self.outputTextView.text = result.debugDescription + "  " + (error?.localizedDescription ?? "")
         })
     }

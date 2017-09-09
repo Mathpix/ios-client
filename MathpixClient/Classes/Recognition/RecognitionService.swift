@@ -144,6 +144,7 @@ class RecognitionService: NSObject {
                         }
                     }
                     complitionHandler?(currentError, result)
+                    MathpixClient.completion?(currentError, result)
                 })
             }
             

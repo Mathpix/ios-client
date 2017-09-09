@@ -19,10 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Setup api keys
         MathpixClient.setApiKeys(appId: "mathpix", appKey: "139ee4b61be2e4abcfb1238d9eb99902")
-        MathpixClient.completion = { (error, result) in
-            print(error ?? "")
-            print(result ?? "")
-        }
         MathpixClient.debug = true
         
         return true

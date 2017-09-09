@@ -9,7 +9,7 @@
 import Foundation
 
 /**
- * Represents an delegate object that get animation process changes.
+ * Represents an delegate object that get recognition animation process changes.
  */
 @objc
 public protocol MathCaptureViewControllerRecognitionAnimationDelegate {

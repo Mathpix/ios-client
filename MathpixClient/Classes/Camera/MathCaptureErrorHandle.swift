@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Internal error handling
 protocol MathCaptureErrorHandle {
     func handle(_ error: Error)
 }
@@ -20,8 +21,8 @@ extension MathCaptureViewController : MathCaptureErrorHandle  {
         } else if let error = error as? RecognitionError {
             handleRecognitionError(error)
         } else {
-            let title = NSLocalizedString("Error capture", comment: "")
-            let message = NSLocalizedString("Capture image error", comment: "")
+            let title = NSLocalizedString("Error capture title", comment: "")
+            let message = NSLocalizedString("Error capture message", comment: "")
             // alert error
             self.alertError(title: title, error: message)
         }
@@ -32,12 +33,12 @@ extension MathCaptureViewController : MathCaptureErrorHandle  {
         if let networkError = error as? NetworkError {
             switch networkError {
             case .notReachedServer:
-                let title = NSLocalizedString("Timeout error", comment: "")
-                let message = NSLocalizedString("Send image timeout, try again later", comment: "")
+                let title = NSLocalizedString("Error timeout title", comment: "")
+                let message = NSLocalizedString("Error timeout message", comment: "")
                 self.alertError(title: title, error: message)
             case .notConnectedToInternet:
-                let title = NSLocalizedString("Network error", comment: "")
-                let message = NSLocalizedString("No internet connection", comment: "")
+                let title = NSLocalizedString("Error no connection tittle", comment: "")
+                let message = NSLocalizedString("Error no connection message", comment: "")
                 self.alertError(title: title, error: message)
             default:
                 break
@@ -52,8 +53,8 @@ extension MathCaptureViewController : MathCaptureErrorHandle  {
         if let recognitionError = error as? RecognitionError {
             switch recognitionError {
             case .failedParseJSON:
-                let title = NSLocalizedString("Error parse", comment: "")
-                let message = NSLocalizedString("Error parse json", comment: "")
+                let title = NSLocalizedString("Error parse title", comment: "")
+                let message = NSLocalizedString("Error parse message", comment: "")
                 // alert error
                 self.alertError(title: title, error: message)
             case .notMath(let message):
@@ -61,8 +62,8 @@ extension MathCaptureViewController : MathCaptureErrorHandle  {
                 // display error under crop area
                 self.onDisplayErrorEventually(resultError)
             case .invalidCredentials:
-                let title = NSLocalizedString("Error credintials", comment: "")
-                let message = NSLocalizedString("Invalid credentials", comment: "")
+                let title = NSLocalizedString("Error credintials title", comment: "")
+                let message = NSLocalizedString("Error credintials messages", comment: "")
                 self.alertError(title: title, error: message)
             }
         }

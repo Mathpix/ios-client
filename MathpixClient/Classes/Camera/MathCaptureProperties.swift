@@ -15,6 +15,10 @@ public struct MathCaptureProperties {
     
     /**
      *  The UI type of invoke capture event.
+     ````
+     case gesture
+     case button
+     ````
      */
     public enum CaptureType {
         /// Tap gesture is used to capture image.
@@ -51,9 +55,6 @@ public struct MathCaptureProperties {
     /// The type of `RecognitionAnimator`. Used to provide animation for recognition process.
     internal let animatorType : RecognitionAnimator.Type
     
-    /// The text of info label under crop area.
-    internal let infoLabelText: String
-    
     /// The type of UI capture action.
     internal let captureType: CaptureType
     
@@ -77,7 +78,6 @@ public struct MathCaptureProperties {
                 flashIcon: UIImage? = nil,
                 backIcon: UIImage? = nil,
                 cancelIcon: UIImage? = nil,
-                infoLabelText: String? = nil,
                 captureType: CaptureType? = nil,
                 requiredButtons: [MathCaptureButton]? = nil,
                 cropColor: UIColor? = nil,
@@ -93,7 +93,6 @@ public struct MathCaptureProperties {
         self.backIcon = backIcon ?? MathpixClient.getImageFromResourceBundle(name: "back_icon")
         self.cancelIcon = cancelIcon ?? MathpixClient.getImageFromResourceBundle(name: "close_icon")
         self.animatorType = animatorType ?? QuoraAnimator.self
-        self.infoLabelText = infoLabelText ?? "Tap anywhere to take a picture"
         self.captureType = captureType ?? CaptureType.gesture
         self.requiredButtons = requiredButtons ?? [.back, .flash]
         self.bigButtonSize = bigButtonSize ?? CGSize(width: 60, height: 60)

@@ -62,7 +62,7 @@ public class MathpixClient {
             appId: MathpixClient.appId,
             appKey: MathpixClient.appKey,
             outputFormats: formats,
-            complitionHandler: completion ?? MathpixClient.completion)
+            complitionHandler: completion)
         return id
     }
     
@@ -89,12 +89,12 @@ public class MathpixClient {
      *  - Parameter formats: formats that the mathpix server should represent in response.
      *  - Parameter properties: UI/UX properties to camera controller.
      *  - Parameter backButtonCallback: completion block will be called after user press back button.
-     *  - Parameter completion: completion block will be called on the main thread after recognition process is finished. If nill then completion static property of MathpixClient is called.
+     *  - Parameter completion: completion block will be called on the main thread after recognition process is finished.
      */
-    public class func launchCamera(source: UIViewController, outputFormats formats: [MathpixFormat]?, withProperties properties: MathCaptureProperties?, backButtonCallback: BackButtonCallback? = nil, completion: RecognitionCallback?) {
+    public class func launchCamera(source: UIViewController, outputFormats formats: [MathpixFormat]?, withProperties properties: MathCaptureProperties?, backButtonCallback: BackButtonCallback? = nil, completion: @escaping RecognitionCallback) {
         let captureVC = MathCaptureViewController()
         captureVC.backButtonCallback = backButtonCallback
-        captureVC.completionCallback = completion ?? MathpixClient.completion
+        captureVC.completionCallback = completion
         captureVC.outputFormats = formats
         captureVC.properties = properties ?? MathCaptureProperties()
         source.present(captureVC, animated: true, completion: nil)
