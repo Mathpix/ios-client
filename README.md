@@ -61,6 +61,6 @@ let properties = MathCaptureProperties(captureType: .gesture,
 
 ```
 
-If you need more control, you can subclass `MathCaptureViewController`. See example project to more info.
+If you need more control, you can subclass `MathCaptureViewController`. See example project for more info.
 
 
