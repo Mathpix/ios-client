@@ -265,7 +265,7 @@ open class MathCaptureViewController: UIViewController
         self.animate(shutterButton)
         
         // Test in simulator
-        self.captureOnSimulator()
+//        self.captureOnSimulator()
     }
     
     /// Cancel recognition process
