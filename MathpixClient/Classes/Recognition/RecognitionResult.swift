@@ -40,7 +40,13 @@ public struct RecognitionResult {
         self.data = data
     }
 
-    
+    func toLatexListString() -> String? {
+        if let latexArray = self.parsed?["latex_list"] as? Array<String> {
+            return "[\(latexArray.map({elem in "\""+elem.replacingOccurrences(of: "\\", with: "\\\\")+"\"" }).joined(separator: ","))]"
+        } else {
+            return nil
+        }
+    }
 }
 
 
