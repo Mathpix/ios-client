@@ -26,9 +26,6 @@ class RecognizeViewController: UIViewController {
             print(result ?? error ?? "")
             self.outputTextView.text = result.debugDescription
         }
-        
-//        let vc = CustomCameraViewController()
-//        present(vc, animated: true, completion: nil)
     }
     
      

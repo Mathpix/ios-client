@@ -84,7 +84,6 @@ open class MathCaptureViewController: UIViewController
         }
         
         setupOverlay()
-        setupCallbacks()
         setupOverlayCallbacks()
         setupDimmingView()
     }
@@ -114,8 +113,12 @@ open class MathCaptureViewController: UIViewController
             self.infoTopConstraint?.constant = convertedPoint.y + 20
             self.regionDraggingCallback?(convertedPoint)
         }
-        cropOverlay.draggingBeganCallback = self.regionDraggingBeganCallback
-        cropOverlay.regionSelectedCallback = self.regionSelectedCallback
+        cropOverlay.draggingBeganCallback = { [unowned self] in
+            self.regionDraggingBeganCallback?()
+        }
+        cropOverlay.regionSelectedCallback = { [unowned self] in
+            self.regionSelectedCallback?()
+        }
     }
 
     
@@ -200,13 +203,6 @@ open class MathCaptureViewController: UIViewController
         backButton.autoPin(toBottomLayoutGuideOf: self, withInset: 20)
         backButton.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
         backButton.autoSetDimensions(to: properties.smallButtonSize)
-    }
-    
-    /**
-     *  This method called after overlay is set. Override it to set callbacks on crop area events.
-     */
-    open func setupCallbacks() {
-        
     }
     
     /**

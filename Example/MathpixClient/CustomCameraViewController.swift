@@ -16,6 +16,7 @@ class CustomCameraViewController: MathCaptureViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupCallbacks()
         // Set delegate to get animation messages
         self.delegate = self
         // Add your UI elements here
@@ -44,8 +45,8 @@ class CustomCameraViewController: MathCaptureViewController {
         
     }
     
-    // Place your crop area callbacks here
-    override func setupCallbacks() {
+    // Set crop area callback
+    func setupCallbacks() {
         regionSelectedCallback = {
             print("region selected")
         }
@@ -55,7 +56,7 @@ class CustomCameraViewController: MathCaptureViewController {
         }
         
         regionDraggingCallback = { point in
-//            print("destination \(point)")
+            print("destination \(point)")
         }
     }
     
