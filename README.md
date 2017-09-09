@@ -1,6 +1,5 @@
 # MathpixClient
 
-[![Platform](http://img.shields.io/badge/platform-ios)](https://developer.apple.com/resources/)
 [![Language](https://img.shields.io/badge/swift-3.0-orange.svg)](https://developer.apple.com/swift)
 
 ## Example
@@ -23,7 +22,7 @@ pod "MathpixClient", :git => 'https://github.com/Mathpix/ios-client.git', :tag =
 First set api keys:
 
 ```swift
-MathpixClient.setApiKeys(appId: "mathpix", appKey: "139ee4b61be2e4abcfb1238d9eb99902")
+MathpixClient.setApiKeys(appId: "", appKey: "")
 ```
 
 You can use MathpixClient to recognize images:
@@ -41,7 +40,7 @@ MathpixClient.launchCamera(source: self,
                            outputFormats: [FormatLatex.simplified],
                            completion:
             { (error, result) in
-                  self.outputTextView.text = result.debugDescription + "  " + (error?.localizedDescription ?? "")
+                
             })
 ```
 You can fine tune this camera controller using `MathCaptureProperties` instance:
@@ -52,7 +51,6 @@ let properties = MathCaptureProperties(captureType: .gesture,
                                                cropColor: UIColor.green,
                                                errorHandling: true)
         
-        // Launch camera with back and completion blocks
         MathpixClient.launchCamera(source: self,
                                    outputFormats: [FormatLatex.simplified],
                                    withProperties: properties,
