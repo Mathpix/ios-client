@@ -1,5 +1,5 @@
 //
-//  ImageService.swift
+//  RecognitionService.swift
 //  MathPix
 //
 //  Created by Sergey Glushchenko on 6/20/16.
@@ -20,7 +20,7 @@ class RecognitionService: NSObject {
         return configuration
     }
     
-    
+    /// Crop image with bounds
     class func cropImage(_ image: UIImage, bounds: CGRect) -> UIImage? {
         
         //Resize image with aspectRation to screen
@@ -62,7 +62,7 @@ class RecognitionService: NSObject {
     }
     
 
-    
+    /// Cancel all requests to mathpix server if exist
     func cancelAllRequests() {
         for task in self.tasks {
             task.value.cancel()
@@ -70,8 +70,16 @@ class RecognitionService: NSObject {
         self.tasks.removeAll()
     }
     
+    /// Cancel request with corresponding id
+    func cancelRequest(_ id: UUID) {
+        if let task = tasks.removeValue(forKey: id) {
+            task.cancel()
+        }
+    }
     
-    func sendToServer(image:UIImage, appId: String?, appKey: String?, outputFormats formats: [MathpixFormat]?, complitionHandler: MathpixClient.RecognitionCallback?) {
+    
+    /// Send image to mathpix server to recognize and then handle response data.
+    @discardableResult func sendToServer(image:UIImage, appId: String?, appKey: String?, outputFormats formats: [MathpixFormat]?, complitionHandler: MathpixClient.RecognitionCallback?) -> UUID {
         
         guard let appId = appId, let appKey = appKey else {
             fatalError("Set api keys before request")
@@ -94,7 +102,7 @@ class RecognitionService: NSObject {
         formats?.forEach{
             formatsJson[$0.json.key] = $0.json.value
         }
-        let parameters = [
+        var parameters = [
             "url": Constants.bodyStart + base64String,
             "formats": formatsJson,
             "ocr": Constants.math
@@ -113,15 +121,28 @@ class RecognitionService: NSObject {
         
         let session = URLSession(configuration: self.currentSessionConfiguration())
         // create uniq task key to save reference of task
-        let taskUUID = UUID()
+        let taskId = UUID()
+        
+        if MathpixClient.debug {
+            parameters.updateValue("...", forKey: "url")
+            NSLog("Send request: %@", request.debugDescription)
+            NSLog("parameters: %@", parameters)
+        }
         let dataTask = session.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
             // remove task from dictionary
-            self?.tasks.removeValue(forKey: taskUUID)
+            self?.tasks.removeValue(forKey: taskId)
             var currentError : Error?
             var result: RecognitionResult?
             // at the end call completion with error or result on the main thread
             defer {
                 DispatchQueue.main.async(execute: {
+                    if MathpixClient.debug {
+                        if let error = currentError {
+                            NSLog("Error request: %@", error.localizedDescription)
+                        } else if let result = result?.parsed {
+                            NSLog("Success request: %@", result)
+                        }
+                    }
                     complitionHandler?(currentError, result)
                 })
             }
@@ -146,10 +167,10 @@ class RecognitionService: NSObject {
             }
         })
         // save task in dictionary of all tasks to keep reference for cancel if needed
-        self.tasks[taskUUID] = dataTask
+        self.tasks[taskId] = dataTask
         
         dataTask.resume()
-        
+        return taskId
     }
     
     

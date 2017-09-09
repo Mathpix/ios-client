@@ -69,6 +69,9 @@ public struct MathCaptureProperties {
     /// The crop area insets.
     internal let cropAreaInsets: UIEdgeInsets
     
+    /// If enabled then errors will be handled by Capture controller
+    internal let errorHandling: Bool
+    
     
     public init(shutterIcon: UIImage? = nil,
                 flashIcon: UIImage? = nil,
@@ -81,7 +84,8 @@ public struct MathCaptureProperties {
                 animatorType: RecognitionAnimator.Type? = nil,
                 bigButtonSize: CGSize? = nil,
                 smallButtonSize: CGSize? = nil,
-                cropAreaInsets: UIEdgeInsets? = nil)
+                cropAreaInsets: UIEdgeInsets? = nil,
+                errorHandling: Bool? = nil)
     {
         
         self.shutterIcon = shutterIcon ?? MathpixClient.getImageFromResourceBundle(name: "shutter_icon")
@@ -96,6 +100,7 @@ public struct MathCaptureProperties {
         self.smallButtonSize = smallButtonSize ?? CGSize(width: 40, height: 40)
         self.cropColor = cropColor ?? UIColor.white
         self.cropAreaInsets = cropAreaInsets ?? UIEdgeInsets(top: 30, left: 0, bottom: 30, right: 0)
+        self.errorHandling = errorHandling ?? false
     }
     
   }

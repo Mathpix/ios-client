@@ -51,10 +51,10 @@ class QuoraAnimator {
         dotThree.autoPinEdge(.trailing, to: .trailing, of: self.container)
         dotThree.autoAlignAxis(.horizontal, toSameAxisOf: self.container)
         
-        setBeginTransform()
+        setTransform()
     }
     
-    fileprivate func setBeginTransform() {
+    fileprivate func setTransform() {
         // Make dots very small (practically invsisble) since
         // we want the animation to start from small to big.
         dotOne.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
@@ -102,7 +102,7 @@ extension QuoraAnimator: RecognitionAnimator {
         self.dotTwo.layer.removeAllAnimations()
         self.dotThree.layer.removeAllAnimations()
         
-        setBeginTransform()
+        setTransform()
         
         self.isAnimated = false
     }

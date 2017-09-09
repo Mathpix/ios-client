@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 public struct RecognitionResult {
     let parsed: NSDictionary?
     let data: Data?
@@ -30,7 +31,7 @@ public struct RecognitionResult {
                 if responseError == "Invalid credentials" {
                     throw RecognitionError.invalidCredentials
                 } else {
-                    throw RecognitionError.notMath(responseError)
+                    throw RecognitionError.notMath(description: responseError)
                 }
             }
             parsedObject = object

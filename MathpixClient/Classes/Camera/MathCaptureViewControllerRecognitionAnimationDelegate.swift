@@ -8,7 +8,9 @@
 
 import Foundation
 
-
+/**
+ * Represents an delegate object that get animation process changes.
+ */
 @objc
 public protocol MathCaptureViewControllerRecognitionAnimationDelegate {
     @objc optional func willStartAnimateRecognition()

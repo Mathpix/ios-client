@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  MathpixClient: f977fba4d0954e5514b1c844a7c0c3696c556d26
+  MathpixClient: 0f47768c8b821798771966a02539d6189eb3c4c9
   Nimble: 415e3aa3267e7bc2c96b05fa814ddea7bb686a29
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   Quick: 8024e4a47e6cc03a9d5245ef0948264fc6d27cff

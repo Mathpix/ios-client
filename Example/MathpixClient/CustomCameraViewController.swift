@@ -14,10 +14,11 @@ class CustomCameraViewController: MathCaptureViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
+        // Set delegate to get animation messages
+        self.delegate = self
         // Add your UI elements here
         
-//        self.delegate = self
+        
         let menuButton = UIButton(forAutoLayout: ())
         menuButton.setTitle("Menu", for: .normal)
         menuButton.addTarget(self, action: #selector(CustomCameraViewController.onMenu), for: .touchUpInside)
@@ -52,7 +53,7 @@ class CustomCameraViewController: MathCaptureViewController {
         }
         
         regionDraggingCallback = { point in
-            print("destination \(point)")
+//            print("destination \(point)")
         }
     }
     
@@ -80,12 +81,10 @@ class CustomCameraViewController: MathCaptureViewController {
     }
 
     
-    override func didRecieve(_ error: Error?, result: RecognitionResult?) {
-        print(result ?? error ?? "")
+    override func didRecieve(error: Error?, result: RecognitionResult?) {
+        print("did recieve result \(result.debugDescription)")
     }
     
-    
-    // MARK: - Error handle
     
     
 

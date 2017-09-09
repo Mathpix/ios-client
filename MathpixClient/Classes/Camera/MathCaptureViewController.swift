@@ -19,7 +19,9 @@ open class MathCaptureViewController: UIViewController
     public var backButtonCallback : MathpixClient.BackButtonCallback?
     /// Callback called after recognition process completed.
     public var completionCallback : MathpixClient.RecognitionCallback?
+    /// Formats that the mathpix server should represent in response.
     public var outputFormats : [MathpixFormat]?
+    /// UI/UX properties to MathCaptureViewController.
     public var properties : MathCaptureProperties!
     
     public weak var delegate: MathCaptureViewControllerRecognitionAnimationDelegate?
@@ -29,27 +31,29 @@ open class MathCaptureViewController: UIViewController
     public var regionDraggingCallback: ((_ bottomCenter : CGPoint)->())?
     
     fileprivate var cropOverlay : CropControlOverlay!
-    fileprivate var cameraView = MPCameraSessionView()
+    fileprivate var cameraView = MPCameraSessionView(forAutoLayout: ())
     fileprivate var dimmingView : UIView?
     
-    fileprivate let tapActionView = UIView()
+    fileprivate let tapActionView = UIView(forAutoLayout: ())
     
-    fileprivate var flashButton : UIButton = MPCameraFlashButton()
-    fileprivate var shutterButton = UIButton()
-    fileprivate var backButton = UIButton()
+    fileprivate var flashButton : UIButton = MPCameraFlashButton(forAutoLayout: ())
+    fileprivate var shutterButton = UIButton(forAutoLayout: ())
+    fileprivate var backButton = UIButton(forAutoLayout: ())
     
     fileprivate var infoTopConstraint: NSLayoutConstraint!
     
-    fileprivate var cropInfoLabel = UILabel()
+    fileprivate var cropInfoLabel = UILabel(forAutoLayout: ())
     
     fileprivate var animator: RecognitionAnimator!
+    
+    fileprivate var currentRequestId : UUID?
 
     override open var shouldAutorotate : Bool {
         return false
     }
     
     override open var supportedInterfaceOrientations : UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.all
+        return UIInterfaceOrientationMask.portrait
     }
     
     
@@ -89,10 +93,6 @@ open class MathCaptureViewController: UIViewController
         super.viewWillAppear(animated)
         cropOverlay.resetView()
         self.setStatusBarStyle()
-    }
-    
-    deinit {
-        print("deinit capture controller")
     }
     
     // MARK:  -  SETUP METHODS
@@ -160,7 +160,7 @@ open class MathCaptureViewController: UIViewController
     // Setup flash button
     fileprivate func setupFlashButton() {
         if let flashIcon = properties.flashIcon {
-            flashButton = UIButton()
+            flashButton = UIButton(forAutoLayout: ())
             flashButton.setImage(flashIcon, for: .normal)
         } else {
             let color = self.view.tintColor
@@ -210,6 +210,9 @@ open class MathCaptureViewController: UIViewController
         properties =  properties ?? MathCaptureProperties()
     }
     
+    /**
+     *  Set status bar style. Override if need change it.
+     */
     open func setStatusBarStyle() {
         UIApplication.shared.setStatusBarStyle(.lightContent, animated: true)
     }
@@ -241,11 +244,12 @@ open class MathCaptureViewController: UIViewController
     
     // MARK: - Actions
 
+    /// Turn on torch on camera.
     public func onFlash() {
         self.cameraView.onTapFlashButton()
     }
     
-    
+    /// This method capture image when invoked.
     public func onCapture() {
         changeControlsState(isEnabled: false)
         self.cropOverlay.flashCrop()
@@ -256,17 +260,21 @@ open class MathCaptureViewController: UIViewController
         self.captureOnSimulator()
     }
     
-    
+    /// Cancel recognition process
     public func onCancel() {
         changeControlsState(isEnabled: true)
-        MathpixClient.cancelAllRequests()
+        if let id = currentRequestId {
+            MathpixClient.cancelRequest(id)
+        }
     }
     
+    /// Dismiss current controller
     public func onBack() {
         backButtonCallback?()
         self.dismiss(animated: true)
     }
     
+    /// Display error under crop area. This method is async. Error will be presented eventually.
     public func onDisplayErrorEventually(_ error: Error) {
         cropOverlay.displayErrorEventually(error)
     }
@@ -279,12 +287,12 @@ open class MathCaptureViewController: UIViewController
      *  - Parameter error: Error object if recognition failed.
      *  - Parameter result: RecognitionResult object if recognition succesed.
      */
-    open func didRecieve(_ error: Error?, result: RecognitionResult?) {
+    open func didRecieve(error: Error?, result: RecognitionResult?) {
         
     }
     
     /**
-     *  This method change state of controls to enabled or disabled when capture/recognize process happens. You can ovveride this method to add your own controls.
+     *  This method change state of controls to enabled or disabled when capture/recognize process happens. You can ovveride this method to change your own controls state.
      *  - Parameter isEnabled: Bool value indicate what state of controlls need to be set.
      */
     open func controlStateChanged(isEnabled: Bool) {
@@ -337,6 +345,7 @@ open class MathCaptureViewController: UIViewController
         dimmingView?.backgroundColor = UIColor(white: 0.1, alpha: 0.8)
         self.cropOverlay.addSubview(animator.view)
         animator.view.autoCenterInSuperview()
+        self.animator.beginAnimation()
         UIView.animate(withDuration: 0.4, animations: {
             self.dimmingView?.alpha = 1.0
             self.cropInfoLabel.isHidden = true
@@ -344,9 +353,7 @@ open class MathCaptureViewController: UIViewController
             self.shutterButton.isHidden = true
             self.backButton.isHidden = true
         }) { (finished) in
-            self.animator.beginAnimation()
         }
-
     }
     
     func stopAnimateRecognition(completionBlock: (() -> ())? = nil) {
@@ -364,17 +371,25 @@ open class MathCaptureViewController: UIViewController
             self.cropOverlay.clearResultView(animated: true)
         }
     }
+
 }
 
 
 extension MathCaptureViewController: MPCameraSessionDelegate {
     open func didFailCaptureWithError(_ error: Error!) {
         changeControlsState(isEnabled: true)
-        if let completion = self.completionCallback {
-            completion(error, nil)
+        
+        completionCallback?(error, nil)
+        self.didRecieve(error: error, result: nil)
+        
+        var handled = false
+        if let error = error, self.properties.errorHandling == true  {
+            handled = true
+            self.handle(error)
+        }
+        // Exit if completion not nil and error not handled internal
+        if self.completionCallback != nil && !handled {
             self.dismiss(animated: true)
-        } else {
-            self.didRecieve(error, result: nil)
         }
     }
     
@@ -384,7 +399,8 @@ extension MathCaptureViewController: MPCameraSessionDelegate {
             self.delegate?.willStartAnimateRecognition?()
             self.startAnimateRecognition()
             self.delegate?.didStartAnimateRecognition?()
-            MathpixClient.recognize(image: croppedImage, outputFormats: outputFormats, completion: { [weak self] (error, result) in
+            self.currentRequestId = MathpixClient.recognize(image: croppedImage, outputFormats: outputFormats, completion: { [weak self] (error, result) in
+                self?.currentRequestId = nil
                 self?.delegate?.willEndAnimateRecognition?()
                 self?.stopAnimateRecognition()
                 self?.delegate?.didEndAnimateRecognition?()
@@ -393,11 +409,18 @@ extension MathCaptureViewController: MPCameraSessionDelegate {
                 if let error = error as? NetworkError, error == .requestCanceled {
                     return
                 }
-                if let completion = self?.completionCallback {
-                    completion(error, result)
+                
+                self?.completionCallback?(error, result)
+                self?.didRecieve(error: error, result: result)
+                
+                var handled = false
+                if let error = error, self?.properties.errorHandling == true  {
+                    handled = true
+                    self?.handle(error)
+                }
+                // Exit if completion not nil and error not handled internal
+                if self?.completionCallback != nil && !handled {
                     self?.dismiss(animated: true)
-                } else {
-                    self?.didRecieve(error, result: result)
                 }
             })
             

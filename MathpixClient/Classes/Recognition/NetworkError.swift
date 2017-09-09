@@ -7,6 +7,8 @@
 //
 
 import Foundation
+
+/// Error type that can be thrown if network failed.
 public enum NetworkError: Error {
     /// Unknown or not supported error.
     case unknown

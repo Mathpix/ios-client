@@ -10,9 +10,9 @@ import PureLayout
 import Foundation
 
 
-public class CropControlOverlay: UIView {
+class CropControlOverlay: UIView {
     var cropControl : CropControl!
-    public let statusLabel = UILabel()
+    let statusLabel = UILabel()
     fileprivate let flashView = UIView()
     var regionSelectedCallback: (()->())?
     var draggingBeganCallback: (()->())?
@@ -115,7 +115,7 @@ public class CropControlOverlay: UIView {
      *  Display errror eventually. This method accept error and displahy it eventually in info label under crop area.
      *  - Parameter error: error object that need be presented.
      */
-    public  func displayErrorEventually(_ error: Error) {
+    func displayErrorEventually(_ error: Error) {
         self.errors.insert(error, at: 0)
         self.animateErrorMessage()
     }

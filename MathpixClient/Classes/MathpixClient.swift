@@ -35,6 +35,8 @@ public class MathpixClient {
     private static var recognitionService = RecognitionService() 
     /// Completion block when recognition process is complete
     public static var completion : RecognitionCallback?
+    /// Enable/Disable debug messages 
+    public static var debug : Bool = false
     
     /**
      *  Set Mathpix api keys.
@@ -47,22 +49,25 @@ public class MathpixClient {
     }
     
     /**
-     *  Recognize image by mathpix server.
-     *  - Parameter image: image to send on server for recognize.
-     *  - Parameter formats: formats that the mathpix server should represent in response.
-     *  - Parameter completion: completion block will be called on the main thread after recognition process is finished. If nill then completion static property of MathpixClient is called.
+     Recognize image by mathpix server.
+     
+     - Parameter image: image to send on server for recognize.
+     - Parameter formats: formats that the mathpix server should represent in response.
+     - Parameter completion: completion block will be called on the main thread after recognition process is finished. If nill then completion static property of MathpixClient is called.
+     - Returns:  Request id that can be used to cancel.
      */
-    public class func recognize(image: UIImage, outputFormats formats: [MathpixFormat]?, completion: RecognitionCallback?) {
-        MathpixClient.recognitionService.sendToServer(
+    @discardableResult public class func recognize(image: UIImage, outputFormats formats: [MathpixFormat]?, completion: RecognitionCallback?) -> UUID {
+        let id = MathpixClient.recognitionService.sendToServer(
             image: image,
             appId: MathpixClient.appId,
             appKey: MathpixClient.appKey,
             outputFormats: formats,
             complitionHandler: completion ?? MathpixClient.completion)
+        return id
     }
     
     /**
-     *  Cancell all requests on mathpix server.
+     *  Cancel all requests on mathpix server.
      *  If any request exists, it will be canceled. `RecognitionCallback` block will be called for each canceled request with NetworkError.requestCanceled error.
      */
     public class func cancelAllRequests() {
@@ -70,10 +75,19 @@ public class MathpixClient {
     }
     
     /**
+     *  Cancel request with corresponding id on mathpix server.
+     *  If any request exists, it will be canceled. `RecognitionCallback` block will be called for each canceled request with NetworkError.requestCanceled error.
+     *  - Parameter id: id of request that need be canceled.
+     */
+    public class func cancelRequest(_ id: UUID) {
+        MathpixClient.recognitionService.cancelRequest(id)
+    }
+    
+    /**
      *  Present MathCaptureViewController with properties.
      *  - Parameter source: image to send on server for recognize.
      *  - Parameter formats: formats that the mathpix server should represent in response.
-     *  - Parameter properties: `MathCaptureProperties` instance with properties for `MathCaptureViewController` instance.
+     *  - Parameter properties: UI/UX properties to camera controller.
      *  - Parameter backButtonCallback: completion block will be called after user press back button.
      *  - Parameter completion: completion block will be called on the main thread after recognition process is finished. If nill then completion static property of MathpixClient is called.
      */

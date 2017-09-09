@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print(error ?? "")
             print(result ?? "")
         }
+        MathpixClient.debug = true
         
         return true
     }
