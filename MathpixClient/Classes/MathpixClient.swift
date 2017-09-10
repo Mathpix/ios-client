@@ -91,7 +91,7 @@ public class MathpixClient {
      *  - Parameter backButtonCallback: completion block will be called after user press back button.
      *  - Parameter completion: completion block will be called on the main thread after recognition process is finished.
      */
-    public class func launchCamera(source: UIViewController, outputFormats formats: [MathpixFormat]?, withProperties properties: MathCaptureProperties?, backButtonCallback: BackButtonCallback? = nil, completion: @escaping RecognitionCallback) {
+    public class func launchCamera(source: UIViewController, outputFormats formats: [MathpixFormat]?, withProperties properties: MathCaptureProperties? = nil, backButtonCallback: BackButtonCallback? = nil, completion: @escaping RecognitionCallback) {
         let captureVC = MathCaptureViewController()
         captureVC.backButtonCallback = backButtonCallback
         captureVC.completionCallback = completion
