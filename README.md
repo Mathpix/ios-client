@@ -14,16 +14,20 @@ MathpixClient is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "MathpixClient", :git => 'https://github.com/Mathpix/ios-client.git', :tag => '0.1.0'
+pod "MathpixClient"
 ```
 
 ## Usage
 
-First set api keys:
+#### Set api keys:
 
 ```swift
+import MathpixClient
+
 MathpixClient.setApiKeys(appId: "", appKey: "")
 ```
+
+#### Recognize images:
 
 You can use MathpixClient to recognize images:
 
@@ -33,17 +37,23 @@ MathpixClient.recognize(image: UIImage(named: "equation")!, outputFormats: [Form
 }
 ```
 
+#### Launch camera:
+
 MathpixClient can launch camera controller to capture and recognize images:
 
 ```swift
-MathpixClient.launchCamera(source: self,
-                           outputFormats: [FormatLatex.simplified],
-                           completion:
-            { (error, result) in
-                
-            })
+        MathpixClient.launchCamera(source: self,
+                                   outputFormats: [FormatLatex.simplified],
+                                   withProperties: nil,
+                                   backButtonCallback: {
+                                        print("back button pressed") },
+                                   completion: { (error, result) in
+                                        print("complete") })
 ```
-You can fine tune this camera controller using `MathCaptureProperties` instance:
+
+#### Launch camera with custom UI/UX properties:
+
+You can fine tune camera controller using `MathCaptureProperties` instance:
 
 ```swift
 let properties = MathCaptureProperties(captureType: .gesture,
@@ -54,13 +64,36 @@ let properties = MathCaptureProperties(captureType: .gesture,
         MathpixClient.launchCamera(source: self,
                                    outputFormats: [FormatLatex.simplified],
                                    withProperties: properties,
-                                   completion:
-            { (error, result) in
-
-        })
+                                   backButtonCallback: {
+                                        print("back button pressed") },
+                                   completion: { (error, result) in
+                                        print("complete") })
 
 ```
 
-If you need more control, you can subclass `MathCaptureViewController`. See example project for more info.
+#### Subclass `MathCaptureViewController`
+
+If you need more control, you can subclass `MathCaptureViewController`.
+
+```swift
+class CustomCameraViewController: MathCaptureViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Add your UI elements here
+        
+    }
 
 
+}
+
+```
+
+## API
+
+
+
+## License
+
+MathpixClient is available under the MIT license. See the LICENSE file for more info.
