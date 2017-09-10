@@ -24,7 +24,7 @@ pod "MathpixClient"
 ```swift
 import MathpixClient
 
-MathpixClient.setApiKeys(appId: "", appKey: "")
+MathpixClient.setApiKeys(appId: "demo_app", appKey: "demo_key")
 ```
 
 #### Recognize images:
@@ -44,7 +44,6 @@ MathpixClient can launch camera controller to capture and recognize images:
 ```swift
         MathpixClient.launchCamera(source: self,
                                    outputFormats: [FormatLatex.simplified],
-                                   withProperties: nil,
                                    backButtonCallback: {
                                         print("back button pressed") },
                                    completion: { (error, result) in
