@@ -102,7 +102,7 @@ class CustomCameraViewController: MathCaptureViewController {
 
 ## API
 
-
+We now describe how to pass options to the Mathpix API via the iOS Mathpix SDK.  For more information regarding these options, please refer to the API documentation at: https://docs.mathpix.com/
 
 ### MathpixFormat
 
