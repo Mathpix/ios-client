@@ -2,7 +2,7 @@
 
 [![Language](https://img.shields.io/badge/swift-3.0-orange.svg)](https://developer.apple.com/swift)
 
-MathpixClient is a simple wrapper to get and recognixe images by mathpix server https://mathpix.com.
+    MathpixClient is a simple wrapper to get and recognize images by mathpix server https://mathpix.com.
 
 
 ## Example
