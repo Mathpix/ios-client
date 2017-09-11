@@ -34,7 +34,7 @@ import MathpixClient
 MathpixClient.setApiKeys(appId: "demo_app", appKey: "demo_key")
 ```
 
-You can request an API key from dashboard.mathpix.com.
+You can request an API key for free from https://dashboard.mathpix.com.
 
 #### Recognize images:
 
