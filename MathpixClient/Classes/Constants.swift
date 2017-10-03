@@ -16,7 +16,7 @@ struct Constants {
     static let bodyStart = "data:image/jpeg;base64,"
     
     // Formats
-    static let math = ["math", "text"]
+    static let math = ["math"]
     
 }
 
