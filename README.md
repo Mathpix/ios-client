@@ -22,6 +22,11 @@ it, simply add the following line to your Podfile:
 pod "MathpixClient"
 ```
 
+and run 
+
+```
+pod install
+```
 
 
 ## Usage
@@ -34,9 +39,24 @@ import MathpixClient
 MathpixClient.setApiKeys(appId: "demo_app", appKey: "demo_key")
 ```
 
+You can request an API key for free from https://dashboard.mathpix.com.
+
+#### Launch camera:
+
+The easiest way to use Mathpix on iOS is to launch our camera controller which can be done in a single line of code!
+
+```swift
+MathpixClient.launchCamera(source: self,
+                           outputFormats: [FormatLatex.simplified],
+                           backButtonCallback: {
+                                print("back button pressed") },
+                           completion: { (error, result) in
+                                print("complete") })
+```
+
 #### Recognize images:
 
-You can use MathpixClient to recognize images:
+If you want to use a custom camera controller, you can still use the MathpixClient to recognize images:
 
 ```swift
 MathpixClient.recognize(image: UIImage(named: "equation")!, outputFormats: [FormatLatex.simplified]) { (error, result) in
@@ -44,22 +64,9 @@ MathpixClient.recognize(image: UIImage(named: "equation")!, outputFormats: [Form
 }
 ```
 
-#### Launch camera:
-
-You can launch camera controller to capture and recognize images:
-
-```swift
-        MathpixClient.launchCamera(source: self,
-                                   outputFormats: [FormatLatex.simplified],
-                                   backButtonCallback: {
-                                        print("back button pressed") },
-                                   completion: { (error, result) in
-                                        print("complete") })
-```
-
 #### Launch camera with custom UI/UX properties:
 
-You can fine tune camera controller using `MathCaptureProperties` instance:
+You can fine tune the camera controller we provide using the `MathCaptureProperties` instance:
 
 ```swift
 let properties = MathCaptureProperties(captureType: .gesture,
@@ -67,13 +74,13 @@ let properties = MathCaptureProperties(captureType: .gesture,
                                                cropColor: UIColor.green,
                                                errorHandling: true)
         
-        MathpixClient.launchCamera(source: self,
-                                   outputFormats: [FormatLatex.simplified],
-                                   withProperties: properties,
-                                   backButtonCallback: {
-                                        print("back button pressed") },
-                                   completion: { (error, result) in
-                                        print("complete") })
+MathpixClient.launchCamera(source: self,
+                           outputFormats: [FormatLatex.simplified],
+                           withProperties: properties,
+                           backButtonCallback: {
+                                print("back button pressed") },
+                           completion: { (error, result) in
+                                print("complete") })
 
 ```
 
@@ -90,17 +97,12 @@ class CustomCameraViewController: MathCaptureViewController {
         // Add your UI elements here
         
     }
-
-
 }
-
 ```
-
-
 
 ## API
 
-
+We now describe how to pass options to the Mathpix API via the iOS Mathpix SDK.  For more information regarding these options, please refer to the API documentation at: https://docs.mathpix.com/
 
 ### MathpixFormat
 
@@ -111,18 +113,18 @@ Protocol represents additional field "formats" in request body. Requested as par
 The latex field, if present, is one of “raw” (result is the unmodified OCR output), “defaultValue” (result is OCR output with extraneous spaces removed), or “simplified” (result has spaces removed, operator shortcuts, and is split into lists where appropriate):
 
 ```swift
-    public enum FormatLatex {
-        case raw, defaultValue, simplified
-    }
+public enum FormatLatex {
+    case raw, defaultValue, simplified
+}
 ```
 
 #### FormatMathml
 The mathml field, if present and set to on, indicates the server should add a mathml field to the JSON result that is a string containing the MathML markup for the recognized math. In the case of an incompatible result, the server will instead add a mathml_error:
 
 ```swift
-    public enum FormatMathml {
-        case on
-    }
+public enum FormatMathml {
+    case on
+}
 ```
 
 #### FormatWolfram
@@ -130,9 +132,9 @@ The mathml field, if present and set to on, indicates the server should add a ma
 The wolfram field, if present and set to on, indicates the server should add a wolfram field to the JSON result that is a string compatible with the Wolfram Alpha engine. In the case of an incompatible result, the server will instead add a wolfram_error field:
 
 ```swift
-    public enum FormatWolfram {
-        case on
-    }
+public enum FormatWolfram {
+    case on
+}
 ```
 
 
@@ -144,79 +146,77 @@ The struct to incapsulate `MathCaptureViewController` properties. You can custom
 
 The color of crop overlay bounds
 ```swift
-    let cropColor: UIColor
+let cropColor: UIColor
 ```
 
 The icon of shutter button
 ```swift
-    let shutterIcon : UIImage?
+let shutterIcon : UIImage?
 ```
 
 The icon of flash button
 ```swift
-    let flashIcon : UIImage?
+let flashIcon : UIImage?
 ```
 
 The icon of back button
 ```swift
-    let backIcon : UIImage?
+let backIcon : UIImage?
 ```
 
 The icon of cancel request button
 ```swift
-    let cancelIcon : UIImage?
+let cancelIcon : UIImage?
 ```
 
 The type of `RecognitionAnimator`. Used to provide animation for recognition process
 ```swift
-    let animatorType : RecognitionAnimator.Type
+let animatorType : RecognitionAnimator.Type
 ```
 
 The type of UI capture action
 ```swift
-    let captureType: CaptureType
-    
-    public enum CaptureType {
-        /// Tap gesture is used to capture image.
-        case gesture
-        /// Shutter button is used to capture image.
-        case button
-    }
+let captureType: CaptureType
+
+public enum CaptureType {
+    /// Tap gesture is used to capture image.
+    case gesture
+    /// Shutter button is used to capture image.
+    case button
+}
 ```
 
 The buttons which will be presented in instantiated `MathCaptureViewController`
 ```swift
-    let requiredButtons: [MathCaptureButton]
-    
-     public enum MathCaptureButton {
-        /// Back button
-        case back
-        /// Flash button
-        case flash
-    }
+let requiredButtons: [MathCaptureButton]
+
+ public enum MathCaptureButton {
+    /// Back button
+    case back
+    /// Flash button
+    case flash
+}
 ```
 
 The size of `shutter` button
 ```swift
-    let bigButtonSize: CGSize
+let bigButtonSize: CGSize
 ```
 
 The size of buttons
 ```swift
-    let smallButtonSize: CGSize
+let smallButtonSize: CGSize
 ```
 
 The crop area insets
 ```swift
-    let cropAreaInsets: UIEdgeInsets
+let cropAreaInsets: UIEdgeInsets
 ```
 
 If enabled then errors will be handled by capture controller
 ```swift
-    let errorHandling: Bool
+let errorHandling: Bool
 ```
-
-
 
 ### MathCaptureViewController
 
@@ -280,20 +280,19 @@ public enum RecognitionError: Error {
 ### Example Error Handling:
 
 ```swift
-        MathpixClient.launchCamera(source: self,
-                                   outputFormats: [FormatLatex.simplified],
-                                   completion:
-                                        { (error, result) in
-                                            if let error = error as? NetworkError {
-                                                handleNetworkError(error)
-                                            } else if let error = error as? RecognitionError {
-                                                handleRecognitionError(error)
-                                            } else if let error = error {
-                                                handleOtherError(error)
-                                            }
-                                            ...
-        })
-
+MathpixClient.launchCamera(source: self,
+                           outputFormats: [FormatLatex.simplified],
+                           completion:
+                                { (error, result) in
+                                    if let error = error as? NetworkError {
+                                        handleNetworkError(error)
+                                    } else if let error = error as? RecognitionError {
+                                        handleRecognitionError(error)
+                                    } else if let error = error {
+                                        handleOtherError(error)
+                                    }
+                                    ...
+})
 ```
 
 ## Localization
