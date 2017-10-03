@@ -9,6 +9,6 @@ target 'MathpixClient_Example' do
         inherit! :search_paths
         inhibit_all_warnings!
         pod 'Quick', '~> 1.0.0'
-        pod 'Nimble', '~> 5.1.1'
+        pod 'Nimble', '~> 7.0.0'
     end
 end
