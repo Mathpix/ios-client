@@ -27,7 +27,7 @@ public struct RecognitionResult {
         
         // Check if image not math
         if let object = JSONObject as? NSDictionary {
-            if let responseError = object["error"] as? String , responseError.characters.count > 0 {
+            if let responseError = object["error"] as? String , responseError.count > 0 {
                 if responseError == "Invalid credentials" {
                     throw RecognitionError.invalidCredentials
                 } else {
