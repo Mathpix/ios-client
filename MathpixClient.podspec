@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MathpixClient'
-  s.version          = '0.1.2'
+  s.version          = '0.1.3'
   s.summary          = 'Simple client to work with Mathpix recognition server.'
 
   s.description      = <<-DESC

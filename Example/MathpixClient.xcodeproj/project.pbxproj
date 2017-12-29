@@ -225,13 +225,13 @@
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = WSZWGJRE79;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = WSZWGJRE79;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0920;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
 				};
