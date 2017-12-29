@@ -13,7 +13,7 @@
 
 ///Type Definitions
 
-typedef NS_ENUM(BOOL, CameraType) {
+typedef NS_ENUM(NSInteger, CameraType) {
     FrontFacingCamera,
     RearFacingCamera,
 };
