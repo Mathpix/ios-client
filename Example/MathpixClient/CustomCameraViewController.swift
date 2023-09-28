@@ -27,7 +27,7 @@ class CustomCameraViewController: MathCaptureViewController {
         menuButton.addTarget(self, action: #selector(CustomCameraViewController.onMenu), for: .touchUpInside)
         
         view.addSubview(menuButton)
-        menuButton.autoPin(toTopLayoutGuideOf: self, withInset: 8)
+        menuButton.autoPinEdge(toSuperviewSafeArea: .top, withInset: 8)
         menuButton.autoPinEdge(.trailing, to: .trailing, of: view, withOffset: -16)
 
     }
@@ -70,7 +70,7 @@ class CustomCameraViewController: MathCaptureViewController {
     
     // MARK: - Actions
     
-    func onMenu() {
+    @objc func onMenu() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Action 1", style: .default, handler: { (_) in
             print("Action 1")

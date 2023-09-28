@@ -87,7 +87,7 @@ class RecognitionService: NSObject {
         
         let URL = Foundation.URL(string: Constants.requestURL)!
         var request = URLRequest(url: URL)
-        let imageData = UIImageJPEGRepresentation(image, 0.5)
+        let imageData = image.jpegData(compressionQuality: 0.5)
         
         let base64String = imageData!.base64EncodedString(options: .init(rawValue: 0))
         // add app id and api key to headers

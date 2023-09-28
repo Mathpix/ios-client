@@ -57,7 +57,7 @@
         do {
             [NSThread sleepForTimeInterval:interval];
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                if (self.delegate) [self.delegate cameraSessionManagerDidReportDeviceStatistics:cameraStatisticsMake(_activeCamera.lensAperture, CMTimeGetSeconds(_activeCamera.exposureDuration), _activeCamera.ISO, _activeCamera.lensPosition)];
+                if (self.delegate) [self.delegate cameraSessionManagerDidReportDeviceStatistics:cameraStatisticsMake(self->_activeCamera.lensAperture, CMTimeGetSeconds(self->_activeCamera.exposureDuration), self->_activeCamera.ISO, self->_activeCamera.lensPosition)];
             }];
         } while (blockSafeSelf);
     }];
@@ -66,7 +66,7 @@
 - (void)addStillImageOutput
 {
     self.stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-    NSDictionary *outputSettings = @{AVVideoCodecKey: AVVideoCodecJPEG};
+    NSDictionary *outputSettings = @{AVVideoCodecKey: AVVideoCodecTypeJPEG};
     self.stillImageOutput.outputSettings = outputSettings;
     
     [self getOrientationAdaptedCaptureConnection];

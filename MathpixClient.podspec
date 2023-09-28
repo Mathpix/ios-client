@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MathpixClient'
-  s.version          = '0.1.3'
+  s.version          = '0.1.4'
   s.summary          = 'Simple client to work with Mathpix recognition server.'
 
   s.description      = <<-DESC
@@ -20,7 +20,8 @@ Pod::Spec.new do |s|
   s.author           = { 'DmitriDevelopment' => 'dmitridevelopment@gmail.com' }
   s.source           = { :git => 'https://github.com/Mathpix/ios-client.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '12.0'
+  s.swift_version = '5.0'
 
   s.source_files = 'MathpixClient/Classes/**/*.{swift,h,m}'
 

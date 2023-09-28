@@ -12,7 +12,7 @@ class CropControl: UIView {
     var widthConstraint: NSLayoutConstraint?
     var heightConstraint: NSLayoutConstraint?
     var initialTouchOffset = CGPoint.zero
-    var panStateCallback: ((_ state: UIGestureRecognizerState) -> ())?
+    var panStateCallback: ((_ state: UIGestureRecognizer.State) -> ())?
     var cropFrameDidChangedCallback: ((_ bottomCenter: CGPoint) -> ())?
     let imageOverlay = UIImageView()
     var boxOverlay : MPOverlayView?
@@ -61,9 +61,9 @@ class CropControl: UIView {
     
     func setupSizeConstraints() {
         widthConstraint = autoSetDimension(.width, toSize: defaultCropSize.width)
-        widthConstraint?.priority = UILayoutPriorityDefaultHigh
+        widthConstraint?.priority = UILayoutPriority.defaultHigh
         heightConstraint = autoSetDimension(.height, toSize: defaultCropSize.height)
-        heightConstraint?.priority = UILayoutPriorityDefaultHigh
+        heightConstraint?.priority = UILayoutPriority.defaultHigh
 
     }
     
@@ -128,7 +128,7 @@ class CropControl: UIView {
         corner.addGestureRecognizer(rec)
     }
 
-    func cornerMoved(_ gestureRecogniser: UIPanGestureRecognizer){
+    @objc func cornerMoved(_ gestureRecogniser: UIPanGestureRecognizer){
         if let corner = gestureRecogniser.view as? CropControlCorner {
             let viewCenter = CGPoint(x: frame.width/2, y: frame.height/2)
             let touchCenter = gestureRecogniser.location(in: self)

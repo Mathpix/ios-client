@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
-typedef void(^BoxDisplayCallback)();
+typedef void(^BoxDisplayCallback)(void);
 
 @interface MPOverlayView : UIView
 

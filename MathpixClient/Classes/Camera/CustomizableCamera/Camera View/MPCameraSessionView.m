@@ -61,7 +61,10 @@
         [self setupCaptureManager:RearFacingCamera];
         cameraBeingUsed = RearFacingCamera;
         [self composeInterface];
-        [_captureManager.captureSession startRunning];
+        dispatch_queue_t getPeopleQueue = dispatch_queue_create("Capture queue", NULL);
+        dispatch_async(getPeopleQueue, ^{
+            [self->_captureManager.captureSession startRunning];
+        });
 #endif
     }
     
@@ -278,13 +281,19 @@
         [self setupCaptureManager:FrontFacingCamera];
         cameraBeingUsed = FrontFacingCamera;
         [self composeInterface];
-        [_captureManager.captureSession startRunning];
+        dispatch_queue_t getPeopleQueue = dispatch_queue_create("Capture queue", NULL);
+        dispatch_async(getPeopleQueue, ^{
+            [self->_captureManager.captureSession startRunning];
+        });
         _cameraFlash.hidden = YES;
     } else {
         [self setupCaptureManager:RearFacingCamera];
         cameraBeingUsed = RearFacingCamera;
         [self composeInterface];
-        [_captureManager.captureSession startRunning];
+        dispatch_queue_t getPeopleQueue = dispatch_queue_create("Capture queue", NULL);
+        dispatch_async(getPeopleQueue, ^{
+            [self->_captureManager.captureSession startRunning];
+        });
         _cameraFlash.hidden = NO;
     }
 }
@@ -293,7 +302,7 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.center = CGPointMake(self.center.x, self.center.y*3);
     } completion:^(BOOL finished) {
-        [_captureManager stop];
+        [self->_captureManager stop];
         [self removeFromSuperview];
     }];
 }
@@ -319,13 +328,13 @@
     _animationInProgress = YES; //Disables input manager
     
     [UIView animateWithDuration:.05 animations:^{
-        _cameraShutter.transform = CGAffineTransformMakeScale(1.1, 1.1);
+        self->_cameraShutter.transform = CGAffineTransformMakeScale(1.1, 1.1);
     } completion:^(BOOL finished) {
         [UIView animateWithDuration:.05 animations:^{
-            _cameraShutter.transform = CGAffineTransformMakeScale(1, 1);
+            self->_cameraShutter.transform = CGAffineTransformMakeScale(1, 1);
         } completion:^(BOOL finished) {
             
-            _animationInProgress = NO; //Enables input manager
+            self->_animationInProgress = NO; //Enables input manager
         }];
     }];
 }
@@ -345,7 +354,7 @@
               self.focalReticule.alpha = 0.0;
           }completion:^(BOOL finished) {
               
-              _animationInProgress = NO; //Enables input manager
+              self->_animationInProgress = NO; //Enables input manager
           }];
      }];
 }
@@ -395,7 +404,7 @@
     [self focusAtPoint:CGPointMake(self.frame.size.width/2, self.frame.size.height/2) completionHandler:^{}];
 }
 
-- (void)focusAtPoint:(CGPoint)point completionHandler:(void(^)())completionHandler
+- (void)focusAtPoint:(CGPoint)point completionHandler:(void(^)(void))completionHandler
 {
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];;
     CGPoint pointOfInterest = CGPointZero;

@@ -100,7 +100,6 @@ open class MathCaptureViewController: UIViewController
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cropOverlay.resetView()
-        self.setStatusBarStyle()
     }
     
     // MARK:  -  SETUP METHODS
@@ -186,7 +185,7 @@ open class MathCaptureViewController: UIViewController
         flashButton.addTarget(self, action: #selector(MathCaptureViewController.onFlash), for: .touchUpInside)
         view.addSubview(flashButton)
         flashButton.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
-        flashButton.autoPin(toTopLayoutGuideOf: self, withInset: 8)
+        flashButton.autoPinEdge(toSuperviewSafeArea: .top, withInset: 8)
         flashButton.autoSetDimensions(to: properties.smallButtonSize)
     }
     
@@ -197,7 +196,7 @@ open class MathCaptureViewController: UIViewController
         shutterButton.contentHorizontalAlignment = .fill
         shutterButton.addTarget(self, action: #selector(MathCaptureViewController.onCapture), for: .touchUpInside)
         view.addSubview(shutterButton)
-        shutterButton.autoPin(toBottomLayoutGuideOf: self, withInset: 20)
+        shutterButton.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 20)
         shutterButton.autoAlignAxis(toSuperviewAxis: .vertical)
         shutterButton.autoSetDimensions(to: properties.bigButtonSize)
     }
@@ -209,7 +208,7 @@ open class MathCaptureViewController: UIViewController
         backButton.contentHorizontalAlignment = .fill
         backButton.addTarget(self, action: #selector(MathCaptureViewController.onBack), for: .touchUpInside)
         view.addSubview(backButton)
-        backButton.autoPin(toBottomLayoutGuideOf: self, withInset: 20)
+        backButton.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 20)
         backButton.autoPinEdge(toSuperviewEdge: .leading, withInset: 20)
         backButton.autoSetDimensions(to: properties.smallButtonSize)
     }
@@ -224,8 +223,9 @@ open class MathCaptureViewController: UIViewController
     /**
      *  Set status bar style. Override if need change it.
      */
-    open func setStatusBarStyle() {
-        UIApplication.shared.setStatusBarStyle(.lightContent, animated: true)
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     /**
@@ -240,7 +240,7 @@ open class MathCaptureViewController: UIViewController
         self.dimmingView?.autoPinEdge(.leading, to: .leading, of: view)
         self.dimmingView?.autoPinEdge(.trailing, to: .trailing, of: view)
         self.dimmingView?.autoPinEdge(.top, to: .top, of: view)
-        self.dimmingView?.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
+        self.dimmingView?.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 0)
         
         let cancelButton = UIButton()
         cancelButton.setImage(properties.cancelIcon, for: .normal)
@@ -258,12 +258,12 @@ open class MathCaptureViewController: UIViewController
     // MARK: - Actions
 
     /// Turn on torch on camera.
-    public func onFlash() {
+    @objc public func onFlash() {
         self.cameraView.onTapFlashButton()
     }
     
     /// This method capture image when invoked.
-    public func onCapture() {
+    @objc public func onCapture() {
         changeControlsState(isEnabled: false)
         self.cropOverlay.flashCrop()
         self.cameraView.onTapShutterButton()
@@ -274,7 +274,7 @@ open class MathCaptureViewController: UIViewController
     }
     
     /// Cancel recognition process
-    public func onCancel() {
+    @objc public func onCancel() {
         changeControlsState(isEnabled: true)
         if let id = currentRequestId {
             MathpixClient.cancelRequest(id)
@@ -282,7 +282,7 @@ open class MathCaptureViewController: UIViewController
     }
     
     /// Dismiss current controller
-    public func onBack() {
+    @objc public func onBack() {
         backButtonCallback?()
         self.dismiss(animated: true)
     }

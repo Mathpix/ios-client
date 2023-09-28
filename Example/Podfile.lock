@@ -1,25 +1,31 @@
 PODS:
-  - MathpixClient (0.1.2):
+  - MathpixClient (0.1.4):
     - PureLayout
-  - Nimble (7.0.2)
-  - PureLayout (3.0.2)
-  - Quick (1.0.0)
+  - Nimble (10.0.0)
+  - PureLayout (3.1.9)
+  - Quick (5.0.1)
 
 DEPENDENCIES:
   - MathpixClient (from `../`)
-  - Nimble (~> 7.0.0)
-  - Quick (~> 1.0.0)
+  - Nimble (~> 10.0.0)
+  - Quick (~> 5.0.0)
+
+SPEC REPOS:
+  trunk:
+    - Nimble
+    - PureLayout
+    - Quick
 
 EXTERNAL SOURCES:
   MathpixClient:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
-  MathpixClient: 44962c35856980d9d65de9d59bfc6368153ea038
-  Nimble: bfe1f814edabba69ff145cb1283e04ed636a67f2
-  PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
-  Quick: 8024e4a47e6cc03a9d5245ef0948264fc6d27cff
+  MathpixClient: 8e18f49fa39f3db2b5fdb14ec8632d5965e0010f
+  Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
+  PureLayout: 5fb5e5429519627d60d079ccb1eaa7265ce7cf88
+  Quick: 749aa754fd1e7d984f2000fe051e18a3a9809179
 
-PODFILE CHECKSUM: 17c67d9ec97fd20dc22416214c74fd527dfe1e36
+PODFILE CHECKSUM: 67014ac6c6d16b4359fbd5f8d7ae72cd3969b150
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.12.0

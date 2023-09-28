@@ -1,5 +1,5 @@
 use_frameworks!
-platform :ios, '8.0'
+platform :ios, '12.0'
 #inhibit_all_warnings!
 
 target 'MathpixClient_Example' do
@@ -8,7 +8,7 @@ target 'MathpixClient_Example' do
     target 'MathpixClient_Tests' do
         inherit! :search_paths
         inhibit_all_warnings!
-        pod 'Quick', '~> 1.0.0'
-        pod 'Nimble', '~> 7.0.0'
+        pod 'Quick', '~> 5.0.0'
+        pod 'Nimble', '~> 10.0.0'
     end
 end
